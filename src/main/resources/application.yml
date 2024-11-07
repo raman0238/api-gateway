@@ -1,0 +1,42 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: orderservice
+          uri: http://localhost:8081/order
+          predicates:
+            - Path=/order/**
+          filters:
+            - GatewayFilter
+        - id: resturantservice
+          uri: http://localhost:8083/resturant # Updated to reflect correct endpoint
+          predicates:
+            - Path=/resturant/** # Updated to match the controller's endpoint
+          filters:
+            - GatewayFilter
+        - id: userservice
+          uri: http://localhost:8080/user # Updated to reflect correct endpoint
+          predicates:
+            - Path=/user/** # Updated to match the controller's endpoint
+          filters:
+            - GatewayFilter
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone : http://localhost:8085/eureka
+    instance:
+      hostname : localhost
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info  # Expose only specific endpoints
+  info:
+    app:
+      name: api-gateway
+      description: api gateway implementation
